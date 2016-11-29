@@ -1,0 +1,44 @@
+用IORegistryExplorer 查找 得到EXP2。加上Device (ARPT)
+            Device (EXP2)
+            {
+                Name (_ADR, 0x001C0001)
+                Device (ARPT)
+                {
+                    Name (_ADR, Zero)
+                    Name (_SUN, One)
+                    Name (_PRW, Package (0x02)
+                    {
+                        0x09, 
+                        0x04
+                    })
+                    Method (_DSM, 4, NotSerialized)
+                    {
+                        If (LEqual (Arg2, Zero))
+                        {
+                            Return (Buffer (One)
+                            {
+                                0x03
+                            })
+                        }
+
+                        Return (Package (0x0C)
+                        {
+                            "AAPL,slot-name", 
+                            "AirPort", 
+                            "built-in", 
+                            Buffer (One)
+                            {
+                                0x00
+                            }, 
+
+                            "device-type", 
+                            "AirPort", 
+                            "model", 
+                            "Atheros AR9x8x 802.11 a/b/g/n Wireless Network Controller", 
+                            "name", 
+                            "AirPort Extreme", 
+                            "compatible", 
+                            "pci168c,30"
+                        })
+                    }
+                }
