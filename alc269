@@ -80,3 +80,14 @@ begin Store ("uefi5-hdmi_audio-1.txt_v2.2 dsdt edits, github.com/toleda", Debug)
             }, Arg4)
         Return (Zero)
     }
+???
+
+声卡驱动
+  如果你只是为获取codec 文件需要Linux系统的话，我强烈推荐大家安装 CDlinux系统（http://cdlinux.info/wiki/doku.php/zh/download/latest ，居然不能给文字加站外链接），它比坛内其他人推荐的系统或工具都要小。另外，10.8的声卡驱动layout-id不能自定义了，因此仿冒驱动的修改与nksmiles有一点点区别。
+1、在dsdt中的Device (HDEF)内加入：Method (_DSM, 4, NotSerialized) { Store (Package (0x0A)   {     "codec-id",      Buffer (0x04)     {     0x69, 0x02, 0xEC, 0x10    },      "layout-id",      Unicode ("V"),      "device-type",      Buffer (0x0F)     {      "Realtek ALC269"     },      "hda-gfx",      Buffer (0x0A)     {     "onboard-1"     },      "PinConfigurations",      Buffer (Zero) {}   }, Local0) DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0)) Return (Local0) }复制代码注意其中的layout-id值，Unicode ("V")对应的是 86 。
+2、打开AppleHDA.kext/Contents/PlugIns/AppleHDAHardwareConfigDriver.kext/Contents/Info.plist 。
+  展开IOKitPersonalities下的HDA Hardware Config Resource，删除HDAConfigDefault下Item 0以外的所有节点；
+展开Item 0，改CodecID的值为283902569（10EC0269转为十进制）；
+改ConfigData的值为（通过整理codec 文件取得）复制代码改LayoutID值为 86 。
+3、将zlib.pl文件及AppleHDA.kext/Contents/Resources/目录下的 layout86.xml.zlib、Platforms.xml.zlib 复制到同一目录下。
+  打开终端，cd命令切换到此目录，再执行下面命令：perl zlib.pl inflate layout86.xml.zlib > layout86.xmlperl zlib.pl inflate Platforms.xml.zlib > Platforms.xml复制代码执行后会生成layout86.xml、Platforms.xml两个文件。
