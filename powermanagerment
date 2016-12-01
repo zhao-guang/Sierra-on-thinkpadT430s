@@ -1,0 +1,62 @@
+1. 在 Method (_PTS, 1, NotSerialized)之前添加一个OperationRegion (PMRS, SystemIO, 0x0430, 0×13)，如下：
+
+OperationRegion (PMRS, SystemIO, 0x430, 0x13)Field (PMRS, ByteAcc, NoLock, Preserve){ , 4, SLPE, 1}
+
+注意红色的0×0430是依据你的主板而定的，你在dsdt里搜索Processor，找到像下面这样的：
+
+Processor (CPU0, 0×00, 0×00000410, 0×06)
+
+如果是0×00000410, 就直接复制上面的就行了，如果是： Processor (P001, 0×01, 0×00000810, 0×06) {}，就将0×0430改成0×0830。
+可以大家已经发现规律了. Processor处是0×00000410，就用0×0430; Processor处是0×00000810, 就用0×0830. 
+同样如果你的dsdt的Processor处是0×00000610，就用0×0630.
+
+Check Device (LPC) if there is a similar Operation Region "LPC0" like below. 
+If you don't have LPC device, just search Name (_ADR, 0x001F0000), sometimes the device name is different. 
+Device (LPC)
+{
+
+Name (_ADR, 0x001F0000)
+
+                OperationRegion (LPC0, PCI_Config, 0xA4, 0x02)
+                Field (LPC0, ByteAcc, NoLock, Preserve){AG3E, 1}
+
+If there is no OperationRegion LPC0, please add code above. 
+In my dsdt's OperationRegion LPC0, there is an EXPE instead of AG3E. So I did not modify it, 
+but had to change a bit in Method (_PTS, 1, NotSerialized) . See mine below:
+OperationRegion (LPC0, PCI_Config, 0x40, 0xC0)
+Field (LPC0, AnyAcc, NoLock, Preserve)
+{
+Offset (0x60),
+, 10,
+EXPE, 1
+}
+
+3 Add code below in Method (_PTS, 1, NotSerialized) like this
+
+Method (_PTS, 1, NotSerialized)
+
+{
+
+Or (Arg0, 0xF0, Local0)
+
+Store (Local0, DBG1)
+
+Store (Zero, \_SB.PCI0.LPC.EXPE) //Please change to \_SB.PCI0.LPC.AG3E if you don't have the EXPE, but add AG3E.
+
+If (LEqual (Arg0, 0x05))
+
+{
+
+Store (Zero, SLPE)
+
+Sleep(0x10)
+
+}
+
+Else
+
+{
+
+//**Original... ...这里是把你的原始代码放到这里面来，解决可能的睡眠破坏问题 }
+
+}
