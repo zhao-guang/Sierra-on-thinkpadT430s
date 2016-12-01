@@ -39,3 +39,34 @@ Add additional stanza including idProduct and idVendor found in previous step
 			<key>idVendor</key>
 			<integer>2652</integer>
 		</dict>
+		
+		
+		
+		
+		
+		                        Device (PRTB)
+                        {
+                            Name (_ADR, 0x04)
+                            Method (_UPC, 0, Serialized)
+                            {
+                                Return (UP11)
+                            }
+
+                            Method (_PLD, 0, Serialized)
+                            {
+                                Return (PL11)
+                            }
+                            Method (_DSM, 4, NotSerialized)
+                            {
+                                If (LEqual (Arg2, Zero))
+                                {
+                                    Return (Buffer (One){0x03})
+                                }
+
+                                Return (Package ()
+                                {
+                                    "vendor-id", Buffer() { 0x5c, 0x0a, 0x00, 0x00 },
+                                    "device-id", Buffer() { 0xe8, 0x21, 0x00, 0x00 }
+                                })
+                            }
+                        }
