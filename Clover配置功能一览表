@@ -1,0 +1,205 @@
+Clover配置功能一览表-Kext驱动说明
+一览表, IvyBridge, MacBook, 配置文件, Desktop
+创建Clover引导器配置文件，默认保存到/Desktop/config.plist，前提 CPU 选项必须勾选
+    ++CPU（配置CPU电源管理和SMBIOS机型文件）
+            > 酷睿2 双核移动处理器：            MacBook Pro 7,1 机型
+            > 酷睿2 双核桌面处理器：                        iMac 10,1 机型
+            > core i 系 第一代移动处理器：   MacBook Pro 6,2 机型
+            > core i 系 第一代桌面处理器：                iMac11,2 机型
+            > SandyBridge构架移动处理器：MacBook Pro 8,1 机型
+            > SandyBridge构架桌面处理器：            iMac 12,2 机型
+            > IvyBridge构架移动处理器：       MacBook Air 5,2 机型
+            > IvyBridge构架桌面处理器：                  iMac 13,2 机型
+            > Haswell构架移动处理器：          MacBook Air 6,2 机型
+            > Haswell构架桌面处理器：                    iMac 14,2 机型
+            > Xeon （志强）处理器：                     MacPro 5,1 机型
+            > Xeon （志强）Haswell构架处理器 ：MacPro 6,1 机型
+            > SandyBridge-E构架处理器：              MacPro 6,1 机型
+            > IvyBridge-E 构架处理器：                    MacPro 6,1 机型
+
+    ++SSDT（配置SSDT 状态）
+        > Generate ：使用Clover自动获取SSDT状态.
+        > Custom：使用 /EFI/CLOVER/ACPI/patched/ssdt.aml 自定义文件
+
+    ++Graphics（配置显卡）
+        > HD3000 Low Resolution： 适用Intel HD3000核显，1366x768分辨率
+        > HD3000 Low Resolution： 适用Intel HD3000核显＋Intel 7系列主板，1366x768分辨率
+        > HD3000 High Resolution：适用Intel HD3000核显，1600x900+分辨率
+        > HD3000 Low Resolution：适用Intel HD3000核显＋Intel 7系列主板，1600x900+分辨率
+        > HD4000 Desktop：适用桌面Intel HD4000核显，ig-platform-id=0x0166000a
+        > HD4000 Desktop：适用桌面Intel HD4000核显＋Intel 6系列主板，ig-platform-id=0x0166000a
+        > HD4000 Low Resolution ：适用笔记本Intel HD4000核显，1366x768分辨率，ig-platform-id=0x01660003
+        > HD4000 Low Resolution ：适用笔记本Intel HD4000核显＋Intel 6系列主板，1366x768分辨率，
+                                                        ig-platform-id=0x01660003
+        > HD4000 High Resolution：适用笔记本Intel HD4000核显，1600x900+分辨率，ig-platform-id=0x01660004
+        > HD4000 High Resolution：适用笔记本Intel HD4000核显＋Intel 6系列主板，1600x900+分辨率，
+                                                        ig-platform-id=0x01660004
+        > HD4600 Desktop：适用桌面Intel HD4600核显，ig-platform-id=0x0d220003
+        > HD4400/4600 Mobile： 适用笔记本Intel HD4600核显，ig-platform-id=0x0a260006
+        > HD5000/5100 ： 适用Intel Iris HD5000/5100核显，ig-platform-id=0x31090800
+        > Nvidia：自动配置Nvidia独立显卡，注意不一定都正常工作！
+        >      ATI：自动配置AMD独立显卡，注意不一定都正常工作！
+
+    ++Inject EDID（配置EDID 注入）
+Ps：注入EDID为了解决某些显示器或笔记本内屏分辨率无法正确识别而采取的一种方法。获取EDID数值方法及工具 前往 落下爱贴
+        > Inject EDID：自动修复一些系统中显卡分辨率显示不正确的问题。
+
+    ++Kernel Lapic（内核补丁）
+        > Kernel Lapic：Lapic 内核补丁适用于 Hp笔记本的cpus=1问题
+
+    ++Boot Flags（启动参数设置）
+        >  -v：从啰嗦模式（verbose mode）启动，显示启动日志内容
+        >  dart＝0：修复因开启VT－d，导致的SMC五国错误
+        > －xcpm：在IvyBridge系统里强制xcpm使用系统内核以实现CPU原生电源管理
+        > -gux_defer_usb2：修复使用GenericUSBXHCI.kext 的睡眠问题
+        > -kext-dev-mode：绕过OS X 10.10系统检测第三方驱动（kext）签名，实现Yosemite系统引导安装的关键参数！
+
+    ++Kext Patches（驱动补丁）
+> Enable Trim Support：给IOAHCIBlockStorage驱动打补丁，使非苹果固态硬盘开启Trim功能。PS：Trim功能详
+        > Still waiting for root：给IOAHCIBlockStorage驱动t打补丁，修复“Still waiting for root”错误
+        > Disable ECC Memory：给AppleTyMCEDrive驱动打补丁，修复MacPro机型因ECC内存校验出现错误
+        > Bluetooth commandWakeup：给IOBluetoothHostControllerUSBTransport驱动t打补丁，
+                                                               修复启动/唤醒 时出现 “Bluetooth 30 seconds…”（蓝牙30秒等待）唤醒命令错误
+        > Intel USB3.0 after sleep：给AppleUSBXHCI驱动打补丁，使在睡眠后能使用USB3.0端口，适用于Intel 8系列主板
+        >  Broadcom 4352 5Ghz：由 Skvo制作的AirPortBrcm4360驱动打补丁，使Broadcom 4352  开启 5Ghz wifi功能
+        > HD3000 VGA port：给AppleIntelSNBGraphicsFB.kext打补丁，开启HD3000核显VGA 输出，
+                                            但这可能造成其他DP 或 HDMI接口无法正常输出信号！
+        > HD4000 DP/HDMI port：给AppleIntelFramebufferCapri.kext打补丁 ，开启笔记本HD4000核显HDMI和DP输出
+        > HD4600 HDMI Audio：给AppleIntelFramebufferCapri.kext打补丁 ，开启笔记本HD4600核显的HDMI音频输出
+
+功能项中文对照－Kexts（驱动）
+＋Kexts（安装设备驱动）
+  ++System（系统内核扩展）
+      > FakeSMC v5： Rev 5.3.1100 针对Mac OS X带硬件传感器监测插件的设备内核扩展程序
+      > FakeSMC v6： Rev 6.0.1426 针对Mac OS X带硬件传感器监测插件的设备内核扩展程序
+      > Patch AppleRTC：对AppleRTC.kext打补丁，修复睡眠/唤醒后CMOS被重置的问题
+
+  ++CPU Power Management （CPU 电源管理内核扩展）
+      > Patch mach_kernel：给系统内核打补丁，修复Haswell系统中对MSR 0xE2写操作时而引起的重启问题                                          PS：问题描述详 Clover r2336更新说明
+      > Patch AICPUPM：给AppleIntelCPUPowerManagement.kext打补丁，修复SandyBridge/IvyBridge系统中对MSR 0xE2写操作时而引起内核错误问题
+      > Enable  SandyBridge-E PM：由omni 制作的AppleIntelCPUPowerManagement.kext补丁，开启SandyBridge-E 系统原生电源管理
+      > Enable  IvyBridge-E PM：由omni 制作的AppleIntelCPUPowerManagement.kext补丁，开启IvyBridge-E 系统原生电源管理
+      > NullCPUPowerManagement：使用NullCPUPowerManagement.kext防止启动加载AppleIntelCPUPowerManagement驱动
+      > DisableTurboBoostBattery：在电池供电模式下禁用CPU睿频以达到节能目的
+  ++Battery（电池）
+      > ACPIBatteryManager ：由 RehabMan制作的ACPIBatteryManager 1.5.2 电池管理扩展内核，需要原始的 ACPIPlatform驱动和打DSDT补丁来工作
+
+  ++Network（网络内核扩展）
+  +++Wireless & Bluetooth（无线网卡和蓝牙内核扩展）> WifiInjector：为（博通）Broadcom 43224/43225/4352无线网卡，Broadcom 20702A/123H/4352, （创锐讯）Atheros9285/9287无线网卡 注入Wfi和蓝牙 设备id
+> BCM94352 5Ghz：由Skvo制作的AirPortBrcm4360驱动补丁，开启Broadcom 4352 5Ghz wifi 功能
+> BTFirmwareUploade：由EMlyDinEsH.制作的BTFirmwareUploader.kext  v2.3， 支持（创锐讯）AtherosAR3011/3022 和（博通）Broadcom BCM20702Ax 蓝牙
+  +++Ethernet （有线网卡内核扩展）
+> NullEthernet：NullEthernet.kext 1.0驱动，在非正常工作网卡的电脑上通过仿冒网卡设备来绕过AppStore（苹果应用商店），同时也将 SSDT-1.aml 安装到 Extra目录里，来实现网卡正常工作。
+  ++++Broadcom （博通）
+> BCM5722D：由adlan和Mieze制作的BCM5722D.kext 2.3.5 驱动，支持BCM5722/5754/5755/5787/5906/57788/5784/57785/
+57781/57780/5752/5761/5761E 有线网卡
+  ++++Realtek（瑞昱）
+> RealtekRTL8111：由Mieze制作的RealtekRTL8111.kext 1.2.0 驱动，支持RTL8111/8168 B/C/D/E/F/G 有线网卡
+> RealtekRTL8100：由Mieze制作的RealtekRTL8100.kext 1.0 驱动，支持RTL8101E/8102E/8102E/8103E/8103E/8103E/8401E/
+8105E/8402/8106E/8106EUS 有线网卡
+> RealtekRTL1000SL：由Slice制作的RealtekRTL8100.kext 20.12.2013，支持RTL8105/8111E/8111F/8136/8168E/8168F有线网卡
+> RealtekRTL8169Ethernet：Realtek官方AppleRTL8169 有线网卡驱动 2.0.6 
+  ++++Intel （英特尔）
+> AppleIntelE1000e：由hnak制作的AppleIntelE1000e.kext 3.0.4，支持Intel 82573/82574L/82578/82579 有线网卡
+  ++++Killer（BigFoot）
+> Killer E2200：gamester3333和Shailua修改的ALXEthernet.kext 1.0.2 驱动，支持 Killer E2200 有线网卡
+  ++++Atheros （创锐讯）
+> ALXEthernet：由Shailua制作的 ALXEthernet.kext 1.0.2 驱动，支持Atheros AR8131/8132/8151/8152/8161/8162/8171/8172 有线网卡
+
+  ++Graphics（显卡）
+            > ACPIBacklight：由 RehabMan制作的ACPIBacklight.kext 2.0.2 驱动，开启enable 亮度调节和平滑效果过渡. 需要对应的DSDT 补丁配合使用
+            > HD3000 VGA port：给AppleIntelSNBGraphicsFB.kext打补丁，开启HD3000核显VGA 输出，但这可能造成其他DP 或 HDMI接口无法正常输出信号！
+            > HD4000 HDMI port：给AppleIntelFramebufferCapri.kext打补丁，开启笔记本HD4000核显 HDMI和 DP接口输出
+            > HD4400/HD4600 DP/HDMI：安装AppleIntelFramebufferAzul 10.9.1来修复当笔记本HD4400/HD4600核显切换HDMI/DP 时的冻屏问题
+
+  ++Sound（声卡）
+            >VoodooHDA2.8.4：声卡万能驱动VoodooHDA2.8.4,包括HDA禁用程序+偏好面板+ voodooloader应用程序
+            >VoodooHDA2.8.5：声卡万能驱动VoodooHDA2.8.5,包括HDA禁用程序+偏好面板+ voodooloader应用程序
+  +++Patch AppleHDA：对S\L\E\下的AppleHDA.kext的音频设置打补丁
+说明：这里的layout数值即声卡layout-id，设置范例（loyout＝1）如下：
+1、变色龙设置
+<key>HDAEnabler</key>
+
+
+<string>Yes</string>
+
+
+<key>HDEFLayoutID</key>
+
+
+<string>1</string>
+复制代码
+复制代码
+2、Clover设置
+<key>Devices</key>
+
+
+<dict>
+
+
+<key>Audio</key>
+
+
+<dict>
+
+
+<key>Inject</key>
+
+
+<string>1</string>
+
+
+</dict>
+复制代码
+  ++++ Desktop（桌面电脑）
+  +++++  Realtek（瑞昱声卡音频设置补丁）
+> Realtek ALC662：桌面主板集成瑞昱ALC662声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=12.
+> Realtek ALC885：桌面主板集成瑞昱ALC885声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=1.归功于toleda.
+> Realtek ALC887：桌面主板集成瑞昱ALC885声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=1或2或3.归功于toleda.
+> Realtek ALC888：桌面主板集成瑞昱ALC885声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=1或2或3.归功于toleda.
+> Realtek ALC889：桌面主板集成瑞昱ALC885声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=1或2或3.归功于toleda.
+> Realtek ALC892：桌面主板集成瑞昱ALC885声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=1或2或3.归功于toleda.
+> Realtek ALC898：桌面主板集成瑞昱ALC885声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=1或2或3.归功于toleda.
+> Realtek ALC1150 ：桌面主板集成瑞昱ALC1150声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=1或2.归功于toleda.
+
+  ++++ Laptop（笔记本电脑）
+  +++++  Conxant（科胜讯声卡音频设置补丁）
+> Conxant 20590：Dell Vostro 3560系列集成的Conxant 20590声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=12.
+> Conxant 20752：ASUS PU401系列集成的Conxant 20752声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=12.
+  +++++  IDT（IDT声卡音频设置补丁）
+> IDT 92HD81B1X：HP Probook/Elitebook系列集成IDT 92HD81B1X声卡. 需要S/L/E内原版AppleHDA.kext 注入音频 layout=12.
+> IDT 92HD91BXX：HP Probook, Pavillion dv6T, Envy 15t 系列集成IDT 92HD91BXX声卡. 需要S/L/E内原版AppleHDA.kext  注入音频 layout=12.
+> IDT 92HD87XX：Dell Latitude系列集成的IDT 92HD87XX声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=12.
+> IDT 92HD87B2/4：HP Probook系列集成的IDT 92HD87B2/4声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=12.
+> IDT 92HD87B1/3：HP Probook系列集成的 IDT 92HD87B1/3声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=12.
+  +++++  Realtek（瑞昱声卡音频设置补丁）
+> Realtek ALC269VB
+> Realtek ALC269VC：Sony VAIO E系列集成的ALC269VC声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=28.
+  ++++++  ALC270
+> ALC270 r1：ASUS K46/K56系列集成瑞昱ALC270声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=28.
+> ALC270 r2：ASUS K55系列集成瑞昱ALC270声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=28.
+> ALC270 r3：ASUS X301A系列集成瑞昱ALC270声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=28.归功于kientux.
+> ALC270 r4：ASUS X550CC系列集成瑞昱ALC270声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=28.归功于kientux.
+> ALC270 r5：ASUS X401A系列集成瑞昱ALC270声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=28. 归功于vusun123.
+> ALC272：Acer 5740G系列集成瑞昱ALC272声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=28.归功于realmadrid_fc.
+> ALC275：Dell XPS L421X系列集成瑞昱ALC275声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=28.归功于tuanpekoe. 
+> ALC282：Dell Inspiron 3521系列集成瑞昱ALC282声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=28.归功于vusun123.
+> ALC663：ASUS N56VZ系列集成瑞昱ALC663声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=28. 归功于vusun123.
+> ALC668：ASUS N550JV系列集成瑞昱ALC668声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=28.归功于vusun123.
+> ALC892：MSI GT70系列集成瑞昱ALC892声卡. 需要S/L/E内原版AppleHDA.kext 注入音频layout=1. 归功于mirone.
+
+  ++Trackpad and Keyboard（触控板和键盘）
+            > Generic Touchpad：让所有触摸板作一个鼠标来工作的驱动，基于RehabMan制作的VoodooPS2Controller驱动，
+                                                    不支持多点触点。
+            >  Elan Touchpad：由EMlyDinEsH制作的Elan Touchpad Driver 3.8 驱动
+            >  Cypress Touchpad：由 Ulysse31制作的Cypress Touchpad Driver 0.7 驱动
+            >  Synaptics Touchpad：由Rehabman制作的Synaptic Touchpad Driver 1.8.12 驱动
+            > ALPS Touchpad：由sontrg, bpedman, RehabMan制作的ALPS touchpad driver 1.8.9 驱动
+            >  Fn keyboard Asus：由EMlyDinEsH制作的AsusNBFnKeys.kext 2.3.5 驱动
+
+  ++Drive
+            > AHCIPortInjector：为AHCI, RAID 芯片组注入设备id
+            > Trim Support：给IOAHCIBlockStorage驱动打补丁，使非苹果固态硬盘开启Trim功能
+
+  ++USB 3.0
+            > GenericUSBXHCI：由Zenith432制作的GenericUSBXHCI.kext 1.2.7 驱动
