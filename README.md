@@ -3,6 +3,8 @@
 
 clover : https://www.tonymacx86.com/threads/guide-booting-the-os-x-installer-on-laptops-with-clover.148093/
 
+https://clover-wiki.zetam.org/Fixing-DSDT#technical-background
+
 ////////////////////////////////////////////////////////////////
 网卡 Atheros ar9285
 \System\Library\Extensions\IO80211Family.kext\Contents\PlugIns\AirPortAtheros40.kext\Contents 
