@@ -285,3 +285,33 @@ Method (_DSM, 4, NotSerialized)
                     })
                 }
             }
+
+
+///////////////////端口修正////////////////////////////
+https://github.com/RehabMan/OS-X-Clover-Laptop-Config/blob/ac6a9cd61bcf1922ad7fe77568fc41540602396b/config_HD4000_1600x900.plist
+
+                        <dict>
+                <key>Comment</key>
+                <string>HDMI-video, 64MB BIOS, HD4000 0x01660004 #1 of 2</string>
+                <key>Disabled</key>
+                <false/>
+                <key>Name</key>
+                <string>AppleIntelFramebufferCapri</string>
+                <key>Find</key>
+                <data>BABmAQEDAQEAAAAC</data>
+                <key>Replace</key>
+                <data>BABmAQECBAIAAAAE</data>
+            </dict>
+            <dict>
+                <key>Comment</key>
+                <string>HDMI-video, 64MB BIOS, HD4000 0x01660004 #2 of 2</string>
+                <key>Disabled</key>
+                <false/>
+                <key>Name</key>
+                <string>AppleIntelFramebufferCapri</string>
+                <key>Find</key>
+                <data>MAIAAAAAAAABAAAAQAAAAAAAAAABAAAAQAAAAAAAAAABAAAAQAAAAAAAAAAAAAAA</data>
+                <key>Replace</key>
+                <data>MAIAAAIFAAAABAAABwQAAAMEAAAABAAAgQAAAAQGAAAABAAAgQAAAAAAAAAAAgAR</data>
+            </dict>
+ 
