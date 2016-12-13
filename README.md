@@ -1,5 +1,9 @@
 # Sierra-on-thinkpadT430s
 
+
+clover : https://www.tonymacx86.com/threads/guide-booting-the-os-x-installer-on-laptops-with-clover.148093/
+
+////////////////////////////////////////////////////////////////
 网卡 Atheros ar9285
 \System\Library\Extensions\IO80211Family.kext\Contents\PlugIns\AirPortAtheros40.kext\Contents 
 添加				<string>pci168c,2b</string>
